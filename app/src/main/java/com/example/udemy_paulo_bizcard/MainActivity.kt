@@ -1,21 +1,29 @@
 package com.example.udemy_paulo_bizcard
 
+import android.content.ContentValues.TAG
+import android.graphics.Paint.Align
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +47,9 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateBizCard() {
+
+    var buttonClickedState by remember { mutableStateOf(false) }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,6 +82,27 @@ fun CreateBizCard() {
             Divider()
 
             CreateProfileInfo()
+
+            Button(
+                onClick = {
+                    buttonClickedState = !buttonClickedState
+                }
+            ) {
+                Text(
+                    text = "Portfolio"
+                )
+            }
+
+            if(buttonClickedState) {
+                Content()
+            } else {
+                Box(
+
+                ) {
+
+                }
+            }
+
         }
 
 
@@ -108,11 +140,11 @@ fun CreateProfileInfo(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .fillMaxSize()
+            .padding(5.dp)
     ) {
         Text(
-            color = Color.Blue,
             text = "Miles P.",
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
             textAlign = TextAlign.Center
         )
@@ -131,8 +163,73 @@ fun CreateProfileInfo(modifier: Modifier = Modifier) {
     }
 }
 
+@Preview
+@Composable
+fun Content() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+    ) {
+        Surface(
+            shape = RoundedCornerShape(5.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(3.dp)
+        ) {
+            PortFolio(data = listOf("Project1", "Project2", "Project3"))
 
-@Preview(showBackground = true)
+        }
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PortFolio(data: List<String>) {
+    LazyColumn {
+        items(data) { item ->
+            Card(
+                shape = RectangleShape,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(15.dp)
+                ) {
+                    CreateImageProfile(
+                        modifier = Modifier
+                            .size(100.dp)
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(
+                                alignment = Alignment.CenterVertically
+                            )
+                    ) {
+                        Text(
+                            text = item,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text ="A Great Project",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+
+
+
+                }
+            }
+        }
+    }
+}
+
+//@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     Udemy_Paulo_BizCardTheme {
